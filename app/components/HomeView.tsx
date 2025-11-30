@@ -73,6 +73,7 @@ export default function HomeView({ onScan }: HomeViewProps) {
                     className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-pink-500 via-purple-500 to-violet-600 font-black text-2xl tracking-[0.2em] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                     style={{
                         color: 'white',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
                         textShadow: `
               0 0 10px rgba(255, 255, 255, 0.8),
               0 0 20px rgba(236, 72, 153, 0.6),
@@ -86,15 +87,18 @@ export default function HomeView({ onScan }: HomeViewProps) {
                     }}
                     onMouseEnter={(e) => {
                         if (!e.currentTarget.disabled) {
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.9)';
                             e.currentTarget.style.boxShadow = `
-                0 0 35px rgba(236, 72, 153, 0.9),
-                0 0 70px rgba(168, 85, 247, 0.6),
-                0 4px 20px rgba(0, 0, 0, 0.4)
+                0 0 45px rgba(236, 72, 153, 1),
+                0 0 80px rgba(168, 85, 247, 0.8),
+                0 0 20px rgba(255, 255, 255, 0.5),
+                0 4px 25px rgba(0, 0, 0, 0.5)
               `;
                         }
                     }}
                     onMouseLeave={(e) => {
                         if (!e.currentTarget.disabled) {
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                             e.currentTarget.style.boxShadow = `
                 0 0 25px rgba(236, 72, 153, 0.6),
                 0 0 50px rgba(168, 85, 247, 0.4),
