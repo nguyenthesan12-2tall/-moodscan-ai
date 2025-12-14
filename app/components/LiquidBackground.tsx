@@ -1,75 +1,63 @@
-import React from 'react';
+'use client';
 import { motion } from 'framer-motion';
 
-export default function LiquidBackground() {
+// BẢNG MÀU CHUẨN - KHÔNG PHA TẠP
+// Tôi đã chỉnh lại độ tương phản (Contrast) để nhìn phát biết ngay mood gì
+const THEMES: Record<string, string> = {
+    // Mặc định: Tím mộng mơ (Huyền bí)
+    default: 'from-indigo-950 via-purple-950 to-black',
+
+    // Vui: Vàng Cam rực rỡ (Năng lượng dương)
+    happy: 'from-orange-500 via-amber-500 to-yellow-500',
+
+    // Buồn: Xanh biển sâu thẳm + Xám (Trầm lắng)
+    sad: 'from-blue-950 via-slate-900 to-black',
+
+    // Tức giận: Đỏ lựu + Tím than (Bùng nổ)
+    angry: 'from-red-700 via-rose-900 to-purple-950',
+
+    // Chill: Xanh ngọc + Đen (Thư giãn)
+    chill: 'from-emerald-800 via-teal-900 to-black',
+};
+
+export default function LiquidBackground({ mood = 'default' }: { mood?: string }) {
+    const bgClass = THEMES[mood] || THEMES.default;
+
     return (
-        <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-black">
-            {/* Blob 1 - Pink/Purple */}
+        <div className={`fixed inset-0 -z-10 transition-colors duration-[1500ms] ease-in-out bg-gradient-to-br ${bgClass} overflow-hidden`}>
+
+            {/* 1. Lớp nhiễu hạt (Noise) - Giữ lại vì nó tạo chất "Phim ảnh" rất đẹp */}
+            <div className="absolute inset-0 opacity-20 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay pointer-events-none"></div>
+
+            {/* 2. Đốm sáng LỚN - Chỉ trôi nhẹ nhàng, không bám chuột */}
             <motion.div
-                className="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-500 rounded-full mix-blend-screen filter blur-[100px] opacity-40"
                 animate={{
-                    x: [0, 100, -50, 0],
-                    y: [0, -100, 50, 0],
-                    scale: [1, 1.2, 0.9, 1],
+                    x: [0, 50, -50, 0],
+                    y: [0, -50, 50, 0],
+                    scale: [1, 1.1, 1]
                 }}
                 transition={{
-                    duration: 20,
+                    duration: 20, // Trôi rất chậm (20 giây)
                     repeat: Infinity,
-                    repeatType: "reverse",
                     ease: "easeInOut"
                 }}
+                className="absolute top-[-20%] left-[-10%] w-[80vw] h-[80vw] bg-white/10 rounded-full blur-[120px] mix-blend-overlay"
             />
 
-            {/* Blob 2 - Blue/Cyan */}
+            {/* 3. Đốm sáng NHỎ - Tạo chiều sâu */}
             <motion.div
-                className="absolute top-[20%] right-[-10%] w-[40vw] h-[40vw] bg-blue-500 rounded-full mix-blend-screen filter blur-[100px] opacity-40"
                 animate={{
-                    x: [0, -100, 50, 0],
-                    y: [0, 100, -50, 0],
-                    scale: [1, 1.1, 0.8, 1],
+                    x: [0, -30, 30, 0],
+                    y: [0, 30, -30, 0],
+                    opacity: [0.3, 0.6, 0.3]
                 }}
                 transition={{
-                    duration: 25,
+                    duration: 15,
                     repeat: Infinity,
-                    repeatType: "reverse",
                     ease: "easeInOut"
                 }}
+                className="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-white/5 rounded-full blur-[90px] mix-blend-overlay"
             />
-
-            {/* Blob 3 - Pink/Red */}
-            <motion.div
-                className="absolute bottom-[-10%] left-[20%] w-[60vw] h-[60vw] bg-pink-500 rounded-full mix-blend-screen filter blur-[100px] opacity-30"
-                animate={{
-                    x: [0, 50, -100, 0],
-                    y: [0, -50, 100, 0],
-                    scale: [1, 1.3, 0.9, 1],
-                }}
-                transition={{
-                    duration: 30,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "easeInOut"
-                }}
-            />
-
-            {/* Blob 4 - Turquoise/Teal (New) */}
-            <motion.div
-                className="absolute bottom-[10%] right-[10%] w-[45vw] h-[45vw] bg-teal-400 rounded-full mix-blend-screen filter blur-[100px] opacity-30"
-                animate={{
-                    x: [0, -60, 30, 0],
-                    y: [0, 80, -40, 0],
-                    scale: [1, 1.2, 0.8, 1],
-                }}
-                transition={{
-                    duration: 28,
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                    ease: "easeInOut"
-                }}
-            />
-
-            {/* Noise Overlay for texture (optional) */}
-            <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
         </div>
     );
 }

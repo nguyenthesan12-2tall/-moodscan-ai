@@ -1,115 +1,98 @@
-import React, { useState } from 'react';
+'use client';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { ScanHistory } from '../utils/sentiment';
 
 interface HomeViewProps {
     onScan: (text: string) => void;
+    history?: ScanHistory[];
 }
 
-export default function HomeView({ onScan }: HomeViewProps) {
-    const [text, setText] = useState('');
+export default function HomeView({ onScan, history = [] }: HomeViewProps) {
+    const [input, setInput] = useState('');
 
-    const handleScan = () => {
-        if (text.trim()) {
-            onScan(text);
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (input.trim()) onScan(input);
+    };
+
+    const getPixelStyle = (mood: string) => {
+        switch (mood) {
+            case 'happy': return { backgroundColor: '#FACC15', boxShadow: '0 0 15px #FACC15' };
+            case 'sad': return { backgroundColor: '#3B82F6', boxShadow: '0 0 15px #3B82F6' };
+            case 'angry': return { backgroundColor: '#EF4444', boxShadow: '0 0 15px #EF4444' };
+            case 'chill': return { backgroundColor: '#34D399', boxShadow: '0 0 15px #34D399' };
+            default: return { backgroundColor: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.1)' };
         }
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full max-w-md p-8 animate-in fade-in zoom-in duration-500">
-            {/* Neon Pink Title with Glow */}
-            <h1
-                className="text-6xl font-black mb-2 text-pink-500"
-                style={{
-                    textShadow: `
-            0 0 10px rgba(236, 72, 153, 0.8),
-            0 0 20px rgba(236, 72, 153, 0.6),
-            0 0 30px rgba(236, 72, 153, 0.4),
-            0 0 40px rgba(59, 130, 246, 0.3)
-          `
-                }}
-            >
-                MoodScan AI
-            </h1>
-            <p className="text-gray-300 mb-10 tracking-[0.3em] text-sm uppercase font-light">Aura Edition</p>
+        // PRIORITY #1: LAYOUT & SPACING
+        // Flex Container with large gap (gap-16) to naturally separate sections
+        <div className="flex flex-col items-center justify-center w-full min-h-[70vh] gap-16 z-10 relative">
 
-            {/* Super Glassmorphic Card with Deep Rounding */}
-            <div
-                className="w-full p-8 rounded-[2rem]"
-                style={{
-                    background: 'rgba(255, 255, 255, 0.08)',
-                    backdropFilter: 'blur(24px)',
-                    WebkitBackdropFilter: 'blur(24px)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.37)'
-                }}
-            >
-                {/* Enhanced Glass Input */}
-                <textarea
-                    className="w-full h-36 p-5 mb-6 resize-none text-lg placeholder-gray-400 rounded-[1.5rem]"
-                    style={{
-                        background: 'rgba(0, 0, 0, 0.3)',
-                        backdropFilter: 'blur(16px)',
-                        WebkitBackdropFilter: 'blur(16px)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        color: 'white',
-                        outline: 'none'
-                    }}
-                    placeholder="How are you feeling right now? (English or Vietnamese)"
-                    value={text}
-                    onChange={(e) => setText(e.target.value)}
-                    onFocus={(e) => {
-                        e.target.style.borderColor = 'rgba(0, 212, 255, 0.5)';
-                        e.target.style.boxShadow = '0 0 20px rgba(0, 212, 255, 0.3)';
-                    }}
-                    onBlur={(e) => {
-                        e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)';
-                        e.target.style.boxShadow = 'none';
-                    }}
-                />
-
-                {/* Glowing Neon Button */}
-                <button
-                    onClick={handleScan}
-                    disabled={!text.trim()}
-                    className="w-full py-5 rounded-[1.5rem] bg-gradient-to-r from-pink-500 via-purple-500 to-violet-600 font-black text-2xl tracking-[0.2em] hover:opacity-90 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                    style={{
-                        color: 'white',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
-                        textShadow: `
-              0 0 10px rgba(255, 255, 255, 0.8),
-              0 0 20px rgba(236, 72, 153, 0.6),
-              0 0 30px rgba(236, 72, 153, 0.4)
-            `,
-                        boxShadow: `
-              0 0 25px rgba(236, 72, 153, 0.6),
-              0 0 50px rgba(168, 85, 247, 0.4),
-              0 4px 15px rgba(0, 0, 0, 0.3)
-            `
-                    }}
-                    onMouseEnter={(e) => {
-                        if (!e.currentTarget.disabled) {
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.9)';
-                            e.currentTarget.style.boxShadow = `
-                0 0 45px rgba(236, 72, 153, 1),
-                0 0 80px rgba(168, 85, 247, 0.8),
-                0 0 20px rgba(255, 255, 255, 0.5),
-                0 4px 25px rgba(0, 0, 0, 0.5)
-              `;
-                        }
-                    }}
-                    onMouseLeave={(e) => {
-                        if (!e.currentTarget.disabled) {
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-                            e.currentTarget.style.boxShadow = `
-                0 0 25px rgba(236, 72, 153, 0.6),
-                0 0 50px rgba(168, 85, 247, 0.4),
-                0 4px 15px rgba(0, 0, 0, 0.3)
-              `;
-                        }
-                    }}
+            {/* PRIORITY #2: UNIQUE TYPOGRAPHY */}
+            <div className="text-center flex flex-col items-center gap-4">
+                <motion.h1
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-7xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40 drop-shadow-[0_0_35px_rgba(255,255,255,0.5)] py-2"
                 >
-                    SCAN MOOD
-                </button>
+                    MoodScan
+                </motion.h1>
+                <motion.p
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.6 }}
+                    transition={{ delay: 0.2 }}
+                    className="text-sm font-mono tracking-[0.8em] text-white uppercase"
+                >
+                    AI Soul Reader
+                </motion.p>
             </div>
+
+            {/* PRIORITY #3: ALIVE INPUT */}
+            <form onSubmit={handleSubmit} className="w-full max-w-lg relative group z-20">
+                <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="How are you feeling?"
+                    className="w-full h-20 rounded-full bg-black/30 backdrop-blur-2xl border border-white/10 text-center text-white text-2xl placeholder-white/20 outline-none transition-all duration-300 focus:scale-105 focus:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                    autoFocus
+                />
+            </form>
+
+            {/* PRIORITY #4: PIXEL TRAIL (Neon History) */}
+            <div className="p-4 rounded-3xl bg-white/5 border border-white/5 backdrop-blur-md flex gap-3">
+                {[...Array(5)].map((_, i) => {
+                    // Logic to show latest history at the end, or invisible placeholders if empty
+                    // Since the user wants 5 slots, we check existing history.
+                    // Assuming we want the most recent ones. if history has 3 items: [0, 1, 2]
+                    // We want to show 5 slots. The map index i goes 0..4.
+
+                    // Let's grab the last 5 items if available, or pad with null/undefined.
+                    // Actually, let's keep it simple: Map 5 slots.
+                    // If we want the *latest* added to appear, we should probably take from the end.
+                    // Implementation detail from previous code: history[history.length - 5 + i]
+
+                    const historyIndex = history.length - 5 + i;
+                    const item = historyIndex >= 0 ? history[historyIndex] : null;
+
+                    return (
+                        <div
+                            key={i}
+                            style={{
+                                width: '16px',
+                                height: '16px',
+                                borderRadius: '4px', // Squircles
+                                transition: 'all 0.3s ease',
+                                ...getPixelStyle(item ? item.mood : 'default')
+                            }}
+                        />
+                    );
+                })}
+            </div>
+
         </div>
     );
 }
